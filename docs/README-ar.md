@@ -9,7 +9,7 @@
 
 # الروابط
 
-[الموقع الرسمي](https://nuclear.js.org)
+[الموقع الرسمي](https://nuclearplayer.com)
 
 [التنزيلات](https://github.com/nukeop/nuclear/releases)
 
@@ -50,7 +50,7 @@ nuclear هو برنامج مشغل موسيقى مجاني يقوم بسحب ا�
 كما أنه يركز أكثر على الصوت. تخيل أنك تستخدم Spotify بدون أن تدفع له ومع مكتبة أكبر.
 
 ## ماذا إن كنت أغارض استخدام Electron لأسباب دينية؟ 
-أنظر [هنا](docs/electron-ar.md).
+أنظر [هنا](electron-ar.md).
 
 ## الميزات 
 

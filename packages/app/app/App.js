@@ -18,7 +18,7 @@ import * as ImportFavActions from './actions/importfavs';
 import * as ConnectivityActions from './actions/connectivity';
 import * as GithubContribActions from './actions/githubContrib';
 import * as WindowActions from './actions/window';
-import * as NuclearConfigActions from './actions/nuclear/configuration';
+import * as DownloadActions from './actions/downloads';
 
 import './app.global.scss';
 import styles from './styles.scss';
@@ -62,8 +62,7 @@ class App extends React.PureComponent {
     this.props.actions.createPlugins(PluginConfig.plugins);
     this.props.actions.deserializePlugins();
     this.props.actions.githubContribInfo();
-    this.props.actions.fetchNuclearConfiguration();
-    this.props.actions.fetchNuclearParams();
+    this.props.actions.resumeDownloads();
 
     this.updateConnectivityStatus(navigator.onLine);
     window.addEventListener('online', () => this.updateConnectivityStatus(true));
@@ -100,12 +99,12 @@ class App extends React.PureComponent {
   }
 
   scrobbleLastFm() {
-    const currentSong = this.props.queue.queueItems[
-      this.props.queue.currentSong
+    const currentTrack = this.props.queue.queueItems[
+      this.props.queue.currentTrack
     ];
     this.props.actions.updateNowPlayingAction(
-      currentSong.artist,
-      currentSong.name,
+      currentTrack.artist,
+      currentTrack.name,
       this.props.scrobbling.lastFmSessionKey
     );
   }
@@ -127,9 +126,9 @@ class App extends React.PureComponent {
     );
   }
 
-  getCurrentSongParameter(parameter) {
-    return this.props.queue.queueItems[this.props.queue.currentSong]
-      ? this.props.queue.queueItems[this.props.queue.currentSong][parameter]
+  getCurrentTrackParameter(parameter) {
+    return this.props.queue.queueItems[this.props.queue.currentTrack]
+      ? this.props.queue.queueItems[this.props.queue.currentTrack][parameter]
       : null;
   }
 
@@ -198,7 +197,7 @@ function mapDispatchToProps(dispatch) {
         SearchActions,
         GithubContribActions,
         WindowActions,
-        NuclearConfigActions
+        DownloadActions
       ),
       dispatch
     )

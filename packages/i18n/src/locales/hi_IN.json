@@ -42,12 +42,19 @@
   },
   "artist": {
     "add-all": "सभी जोड़ें",
-    "count": "प्ले काउंट",
+    "count": "Playcount",
     "queue": "कतार में सभी ट्रैक जोड़ें",
     "similar": "समान कलाकार",
     "title": "शीर्षक",
     "tour": "दौरे पर",
-    "popular-tracks": "Popular tracks"
+    "popular-tracks": "Popular tracks",
+    "artist-albums": {
+      "header": "Albums",
+      "sort-by-release-date": "Sort by release date",
+      "sort-by-az": "Sort A-Z",
+      "sort-by-most-played": "Sort by most played",
+      "filter-placeholder": "Filter..."
+    }
   },
   "dashboard": {
     "add-all": "सभी जोड़ें",
@@ -195,7 +202,9 @@
     "input-playlist-url": "Paste playlist URL:",
     "create-playlist-dialog-title": "Input playlist name:",
     "playlist": "Playlist",
-    "play": "Play"
+    "play": "Play",
+    "external-source-tooltip": "This playlist is from an external source: {{source}}. You can't edit it. Save it locally using the playlist menu to make changes.",
+    "save-external-playlist": "Save locally"
   },
   "plugins": {
     "add-a-plugin": "प्लगइन जोड़ें",
@@ -225,7 +234,7 @@
     "copy-track-url": "Copy track URL to clipboard",
     "loading": "स्ट्रीम अभी भी लोड हो रही है.",
     "playlist-add": "प्‍लेलिस्‍ट में जोड़ें",
-    "playlist-add-queue": "प्‍लेलिस्‍ट में कतार जोड़ें",
+    "playlist-add-queue": "Add queue to playlist",
     "playlist-toast-content": "प्लेलिस्ट {{name}} बन गई है।",
     "playlist-toast-title": "प्लेलिस्ट बनाई गई!",
     "live": "लाइव",
@@ -281,6 +290,7 @@
     "autoradio-craziness": "ऑटोरेडियो पागलपन",
     "autoradio-craziness-description": "ऑटोरेडियो उन गानों का चयन करेगा जो पहले से कतार में लगे गानों से कम मिलते-जुलते हैं",
     "autoradio-description": "कतार समाप्त होने पर स्वचालित रूप से समान ट्रैक जोड़ें",
+    "auto-download-favourites": "Auto download favorite track",
     "listening-history": "Listening history",
     "listening-history-description": "Log the tracks you listen to, a la Last.fm. The history is stored offline.",
     "compact-menu-bar": "मेनू बार के लिए कॉम्पैक्ट शैली का प्रयोग करें",
@@ -332,8 +342,6 @@
     "notlogged": "लॉगिन नहीं हैं",
     "playback": "प्लेबैक",
     "program-settings": "कार्यक्रम सेटिंग्‍स",
-    "promoted-artists": "Show promoted artists in the dashboard",
-    "promoted-artists-description": "This is a reel of interesting, handpicked indie artists you might like. No one's receiving any compensation for this.",
     "saving-in": "सहेजा जा रहा है...",
     "seek-iteration": "तीर कुंजियों को दबाते समय आगे/पीछे जाने के लिए सेकंड की संख्या",
     "show-tray-icon": "Show tray icon",
@@ -385,7 +393,8 @@
     "add-selected-tracks-to-favorites": "चयनित को प्रिय में जोड़ें",
     "play-selected-tracks-now": "चयनितो को अभी प्ले करें",
     "tracks-selected-label-singular": "चयनित ट्रैक",
-    "tracks-selected-label-plural": "चयनित ट्रैक"
+    "tracks-selected-label-plural": "चयनित ट्रैक",
+    "filter-input-placeholder": "Filter..."
   },
   "visualizer": {
     "exit-fullscreen": "फुलस्क्रीन मोड से बाहर निकलने के लिए Esc दबाएं।"

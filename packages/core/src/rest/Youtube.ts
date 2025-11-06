@@ -1,12 +1,11 @@
-import logger from 'electron-timber';
-import ytdl from '../ytdl-core';
-
-import ytpl from 'ytpl';
-import {search, SearchVideo} from 'youtube-ext';
+import { logger } from '../../';
+import ytdl from '@nuclearplayer/ytdl-core';
+import ytpl from '@distube/ytpl';
 
 import { StreamData, StreamQuery } from '../plugins/plugins.types';
 import * as SponsorBlock from './SponsorBlock';
 import { YoutubeHeuristics } from './heuristics';
+import ytsr, { Video } from '@distube/ytsr';
 
 export type YoutubeResult = {
   streams: { source: string, id: string }[]
@@ -16,6 +15,7 @@ export type YoutubeResult = {
 }
 
 const baseUrl = 'http://www.youtube.com/watch?v=';
+const agent = ytdl.createAgent();
 
 function isValidURL(str) {
   const pattern = new RegExp('^(https?:\\/\\/)' + // protocol
@@ -46,11 +46,11 @@ function analyseUrlType(url) {
   return analysisResult;
 }
 
-function formatPlaylistTrack(track: ytpl.Item) {
+function formatPlaylistTrack(track: ytpl.result['items'][0]): YoutubeResult {
   return {
     streams: [{ source: 'Youtube', id: track.id }],
     name: track.title,
-    thumbnail: track.thumbnails[0].url,
+    thumbnail: track.thumbnail,
     artist: track.author.name
   };
 }
@@ -59,17 +59,8 @@ export async function handleYoutubePlaylist(url: string): Promise<YoutubeResult[
   try {
     const playlistID = await ytpl.getPlaylistID(url);
     if (ytpl.validateID(playlistID)) {
-      const playlistResult = await ytpl(playlistID, { pages: 1 });
-      const totalTrackCount = playlistResult.estimatedItemCount;
+      const playlistResult = await ytpl(playlistID);
       const allTracks = playlistResult.items;
-      let trackCount = allTracks.length;
-      let haveMoreTrack = playlistResult.continuation;
-      while (trackCount < totalTrackCount && haveMoreTrack) {
-        const moreTracks = await ytpl.continueReq(haveMoreTrack);
-        trackCount += moreTracks.items.length;
-        allTracks.push(...moreTracks.items);
-        haveMoreTrack = moreTracks.continuation;
-      }
 
       return allTracks.map(formatPlaylistTrack);
     }
@@ -84,23 +75,22 @@ export async function handleYoutubePlaylist(url: string): Promise<YoutubeResult[
 }
 
 async function handleYoutubeVideo(url: string): Promise<YoutubeResult[]> {
-  return ytdl.getInfo(url)
-    .then(info => {
-      if (info.videoDetails) {
-        const videoDetails = info.videoDetails;
-
-        return [{
-          streams: [{ source: 'Youtube', id: videoDetails.videoId }],
-          name: videoDetails.title,
-          thumbnail: videoDetails.thumbnails[0].url,
-          artist: { name: videoDetails.ownerChannelName }
-        }];
-      }
-      return [];
-    })
-    .catch(function () {
-      return Promise.resolve([]);
-    });
+  try {
+    const info = await ytdl.getInfo(url, { agent });
+    if (info.videoDetails) {
+      const videoDetails = info.videoDetails;
+    
+      return [{
+        streams: [{ source: 'Youtube', id: videoDetails.videoId }],
+        name: videoDetails.title,
+        thumbnail: getLargestThumbnail(videoDetails.thumbnails),
+        artist: { name: videoDetails.ownerChannelName }
+      }];
+    }
+    return [];
+  } catch (e) {
+    return [];
+  }
 }
 
 export async function urlSearch(url: string): Promise<YoutubeResult[]> {
@@ -117,29 +107,20 @@ export async function urlSearch(url: string): Promise<YoutubeResult[]> {
 }
 
 export async function liveStreamSearch(query: string): Promise<YoutubeResult[]> {
-  // FIXME: since ytsr is broken, we can't use it for now
-  // Instead, we're using youtube-ext, which doesn't support live search, so we're just returning an empty array
-  return [];
+  if (isValidURL(query)) {
+    return [];
+  }
 
-  // if (isValidURL(query)) {
-  //   return [];
-  // }
+  const searchResults = await ytsr(query, { safeSearch: false, limit: 10 });
 
-  // const videoFilter = (await retryWithExponentialBackoff(() => ytsr.getFilters(query))).get('Type').get('Video');
-  // const liveFilter = (await retryWithExponentialBackoff(() => ytsr.getFilters(videoFilter.url))).get('Features').get('Live');
-  // const options = {
-  //   limit: 10
-  // };
-  // const searchResults = await ytsr(liveFilter.url, options);
-
-  // return searchResults.items.map((video: ytsr.Video) => {
-  //   return {
-  //     streams: [{ source: 'Youtube', id: video.id }],
-  //     name: video.title,
-  //     thumbnail: video.bestThumbnail.url,
-  //     artist: { name: video.author.name }
-  //   };
-  // });
+  return searchResults.items
+    .filter(item => item.isLive)
+    .map((video: ytsr.Video) => ({
+      streams: [{ source: 'Youtube', id: video.id }],
+      name: video.name,
+      thumbnail: video.thumbnail,
+      artist: { name: video.author.name }
+    }));
 }
 
 export async function trackSearch(query: StreamQuery, sourceName?: string) {
@@ -149,24 +130,24 @@ export async function trackSearch(query: StreamQuery, sourceName?: string) {
 export async function trackSearchByString(query: StreamQuery, sourceName?: string, useSponsorBlock = true): Promise<StreamData[]> {
   const terms = query.artist + ' ' + query.track;
 
-  const results = await search(terms, { filterType: 'video' });
+  const tracks = (await ytsr(terms, { safeSearch: false, type: 'video', limit: 10 })).items.filter((item) => item.isLive === false);
 
   const heuristics = new YoutubeHeuristics();
 
   const orderedTracks = heuristics.orderTracks({
-    tracks: results.videos,
+    tracks,
     artist: query.artist,
     title: query.track
   });
 
   return orderedTracks
-    .map((track) => videoToStreamData(track as SearchVideo, sourceName));
+    .map((track) => videoToStreamData(track as Video, sourceName));
 }
 
 export const getStreamForId = async (id: string, sourceName: string, useSponsorBlock = true): Promise<StreamData> => {
   try {
     const videoUrl = baseUrl + id;
-    const trackInfo = await ytdl.getInfo(videoUrl);
+    const trackInfo = await ytdl.getInfo(videoUrl, { agent });
     const formatInfo = ytdl.chooseFormat(trackInfo.formats, { quality: 'highestaudio' });
     const segments = useSponsorBlock ? await SponsorBlock.getSegments(id) : [];
 
@@ -176,35 +157,44 @@ export const getStreamForId = async (id: string, sourceName: string, useSponsorB
       stream: formatInfo.url,
       duration: parseInt(trackInfo.videoDetails.lengthSeconds),
       title: trackInfo.videoDetails.title,
-      thumbnail: trackInfo.thumbnail_url,
+      thumbnail: getLargestThumbnail(trackInfo.videoDetails.thumbnails),
       format: formatInfo.container,
       skipSegments: segments,
       originalUrl: videoUrl,
       isLive: formatInfo.isLive,
       author: {
         name: trackInfo.videoDetails.author.name,
-        thumbnail: trackInfo.videoDetails.author.thumbnails[0].url
+        thumbnail: getLargestThumbnail(trackInfo.videoDetails.author.thumbnails)
       }
     };
   } catch (e) {
-    logger.error('youtube track get by id');
+    logger.error('Yotube - getStreamForId error');
     logger.error(e);
-    throw new Error(`Can not find youtube track with ${id}`);
+    throw new Error(`Could not find a Youtube track with ${id}`);
   }
 };
 
-function videoToStreamData(video: SearchVideo, source: string): StreamData {
+function videoToStreamData(video: Video, source: string): StreamData {
   return {
     source,
     id: video.id,
     stream: undefined,
-    duration: parseInt(video.duration.text),
-    title: video.title,
-    thumbnail: video.thumbnails[0].url,
+    duration: parseInt(video.duration),
+    title: video.name,
+    thumbnail: getLargestThumbnail(video.thumbnails),
     originalUrl: video.url,
     author: {
-      name: video.channel.name,
-      thumbnail: video.thumbnails[0].url
+      name: video.author.name,
+      thumbnail: getLargestThumbnail(video.thumbnails)
     }
   };
 }
+
+const getLargestThumbnail = (thumbnails: ytdl.thumbnail[]): string => {
+  const isNotEmpty = thumbnails.length > 0;
+  const largestThumbnail = isNotEmpty && thumbnails.reduce((prev, current) => {
+    return (prev.height * prev.width) > (current.height * current.width) ? prev : current;
+  });
+
+  return largestThumbnail?.url;
+};

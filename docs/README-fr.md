@@ -7,7 +7,7 @@ Lecteur de musique spécialisé dans le streaming depuis des sources gratuites
 
 # Links
 
-[Site officiel](https://nuclear.js.org)
+[Site officiel](https://nuclearplayer.com)
 
 [Téléchargements](https://github.com/nukeop/nuclear/releases)
 
@@ -44,7 +44,7 @@ Nuclear se concentre aussi davantage sur l'audio. Imaginez Spotify, mais sans pa
 une librairie encore plus vaste.
 
 ## Et si je suis religieusement contre Electron ?
-Voir [ceci](docs/electron-fr.md).
+Voir [ceci](electron-fr.md).
 
 ## Fonctionnalités
 

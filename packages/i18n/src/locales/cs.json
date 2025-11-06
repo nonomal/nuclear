@@ -42,12 +42,19 @@
   },
   "artist": {
     "add-all": "Přidat vše",
-    "count": "Počet přehrání",
+    "count": "Playcount",
     "queue": "Přidat všechny skladby do fronty",
     "similar": "Podobní umělci",
     "title": "Název",
     "tour": "Na turné",
-    "popular-tracks": "Popular tracks"
+    "popular-tracks": "Popular tracks",
+    "artist-albums": {
+      "header": "Albums",
+      "sort-by-release-date": "Sort by release date",
+      "sort-by-az": "Sort A-Z",
+      "sort-by-most-played": "Sort by most played",
+      "filter-placeholder": "Filter..."
+    }
   },
   "dashboard": {
     "add-all": "Přidat vše",
@@ -195,7 +202,9 @@
     "input-playlist-url": "Paste playlist URL:",
     "create-playlist-dialog-title": "Input playlist name:",
     "playlist": "Playlist",
-    "play": "Play"
+    "play": "Play",
+    "external-source-tooltip": "This playlist is from an external source: {{source}}. You can't edit it. Save it locally using the playlist menu to make changes.",
+    "save-external-playlist": "Save locally"
   },
   "plugins": {
     "add-a-plugin": "Přidat plugin",
@@ -225,7 +234,7 @@
     "copy-track-url": "Copy track URL to clipboard",
     "loading": "Stream se ještě načítá.",
     "playlist-add": "Přidat do seznamu skladeb",
-    "playlist-add-queue": "Přidat frontu do seznamu skladeb",
+    "playlist-add-queue": "Add queue to playlist",
     "playlist-toast-content": "Seznam skladeb {{name}} byl vytvořen.",
     "playlist-toast-title": "Seznam skladeb vytvořen",
     "live": "Živě",
@@ -281,6 +290,7 @@
     "autoradio-craziness": "Bláznivost autorádia",
     "autoradio-craziness-description": "Čím bláznivější, tím spíše autorádio vybere skladby, které se méně podobají těm, které jsou již ve frontě",
     "autoradio-description": "Přidat automaticky podobné skladby po dokončení přehrávání fronty",
+    "auto-download-favourites": "Auto download favorite track",
     "listening-history": "Historie přehrávání",
     "listening-history-description": "Zaznamenávejte skladby, které posloucháte, a la Last.fm. Historie je ukládána offline.",
     "compact-menu-bar": "Použít kompaktní styl pro lištu menu",
@@ -332,8 +342,6 @@
     "notlogged": "Nepřihlášen",
     "playback": "Přehrávání",
     "program-settings": "Nastavení programu",
-    "promoted-artists": "Zobrazit na nástěnce propagované umělce",
-    "promoted-artists-description": "Toto je přehled zajímavých nezávislých umělců, kteří by se vám mohli líbit. Nikdo za to nedostává žádnou odměnu.",
     "saving-in": "Ukládáno do:",
     "seek-iteration": "Počet vteřin posunu vpřed/zpět po stisknutí kláves šipek",
     "show-tray-icon": "Zobrazit ikonu v liště",
@@ -385,7 +393,8 @@
     "add-selected-tracks-to-favorites": "Přidat vybrané skladby do oblíbených",
     "play-selected-tracks-now": "Přehrát vybrané",
     "tracks-selected-label-singular": "vybraná skladba",
-    "tracks-selected-label-plural": "vybrané skladby"
+    "tracks-selected-label-plural": "vybrané skladby",
+    "filter-input-placeholder": "Filter..."
   },
   "visualizer": {
     "exit-fullscreen": "Stiskněte ESC pro opuštění celé obrazovky"

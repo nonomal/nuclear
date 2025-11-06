@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { compose, withProps } from 'recompose';
 import Sound, { Volume, Equalizer, AnalyserByFrequency } from 'react-hifi';
-import logger from 'electron-timber';
+import { logger } from '@nuclear/core';
 import { head } from 'lodash';
 import { IpcEvents, rest } from '@nuclear/core';
 import { post as mastodonPost } from '@nuclear/core/src/rest/Mastodon';
@@ -25,6 +25,7 @@ import HlsPlayer from '../../components/HLSPlayer';
 import { ipcRenderer } from 'electron';
 
 const lastfm = new rest.LastFmApi(globals.lastfmApiKey, globals.lastfmApiSecret);
+let previousTrack = null;
 
 class SoundContainer extends React.Component {
   constructor(props) {
@@ -59,22 +60,39 @@ class SoundContainer extends React.Component {
     this.handleLoadLyrics();
     this.handleAutoRadio();
     this.props.actions.updateStreamLoading(false);
+
+    let currentTrack = this.props.queue.queueItems[
+      this.props.queue.currentTrack
+    ];
+    if (this.props.settings.listeningHistory && currentTrack !== previousTrack) {
+      // Don't add the same track
+      if (previousTrack === null ||
+          currentTrack.artist !== previousTrack.artist ||
+          currentTrack.name !== previousTrack.name ||
+          currentTrack.duration !== previousTrack.duration) {
+        previousTrack = currentTrack;
+        ipcRenderer.send(IpcEvents.POST_LISTENING_HISTORY_ENTRY, {
+          title: currentTrack.title ?? currentTrack.name,
+          artist: currentTrack.artist
+        });
+      }
+    }
   }
 
   handleLoadLyrics() {
-    const currentSong = this.props.queue.queueItems[
-      this.props.queue.currentSong
+    const currentTrack = this.props.queue.queueItems[
+      this.props.queue.currentTrack
     ];
 
-    if (currentSong && typeof currentSong.lyrics === 'undefined') {
-      this.props.actions.lyricsSearch(currentSong);
+    if (currentTrack && typeof currentTrack.lyrics === 'undefined') {
+      this.props.actions.lyricsSearch(currentTrack);
     }
   }
 
   handleAutoRadio() {
     if (
       this.props.settings.autoradio &&
-      this.props.queue.currentSong === this.props.queue.queueItems.length - 1
+      this.props.queue.currentTrack === this.props.queue.queueItems.length - 1
     ) {
       Autoradio.addAutoradioTrackToQueue(this.props);
     }
@@ -85,30 +103,23 @@ class SoundContainer extends React.Component {
       this.props.actions.randomizePreset();
     }
 
-    const currentSong = this.props.queue.queueItems[
-      this.props.queue.currentSong
+    const currentTrack = this.props.queue.queueItems[
+      this.props.queue.currentTrack
     ];
     if (
       this.props.scrobbling.lastFmScrobblingEnabled &&
       this.props.scrobbling.lastFmSessionKey
     ) {
       this.props.actions.scrobbleAction(
-        currentSong.artist,
-        currentSong.title ?? currentSong.name,
+        currentTrack.artist,
+        currentTrack.title ?? currentTrack.name,
         this.props.scrobbling.lastFmSessionKey
       );
     }
 
-    if (this.props.settings.listeningHistory) {
-      ipcRenderer.send(IpcEvents.POST_LISTENING_HISTORY_ENTRY, {
-        artist: currentSong.artist,
-        title: currentSong.title ?? currentSong.name
-      });
-    }
-
     if (
       this.props.settings.shuffleQueue ||
-      this.props.queue.currentSong < this.props.queue.queueItems.length - 1 ||
+      this.props.queue.currentTrack < this.props.queue.queueItems.length - 1 ||
       this.props.settings.loopAfterQueueEnd
     ) {
       this.props.actions.nextSong();
@@ -120,8 +131,8 @@ class SoundContainer extends React.Component {
       this.props.settings.mastodonInstance) {
       const selectedStreamUrl = this.props.currentStream?.originalUrl || '';
       let content = this.props.settings.mastodonPostFormat + '';
-      content = content.replaceAll('{{artist}}', currentSong.artist);
-      content = content.replaceAll('{{title}}', currentSong.name);
+      content = content.replaceAll('{{artist}}', currentTrack.artist);
+      content = content.replaceAll('{{title}}', currentTrack.name);
       content = content.replaceAll('{{url}}', selectedStreamUrl);
       mastodonPost(
         this.props.settings.mastodonInstance,
@@ -132,9 +143,9 @@ class SoundContainer extends React.Component {
   }
 
   addAutoradioTrackToQueue() {
-    const currentSong = this.props.queue.queueItems[this.props.queue.currentSong];
+    const currentTrack = this.props.queue.queueItems[this.props.queue.currentTrack];
     return lastfm
-      .getArtistInfo(currentSong.artist)
+      .getArtistInfo(currentTrack.artist)
       .then(artist => artist.json())
       .then(artistJson => this.getSimilarArtists(artistJson.artist))
       .then(similarArtists => this.getRandomElement(similarArtists))
@@ -178,18 +189,18 @@ class SoundContainer extends React.Component {
   handleError(err) {
     logger.error(err.message);
     const { queue } = this.props;
-    this.props.actions.removeFromQueue(queue.currentSong);
+    this.props.actions.removeFirstStream(queue.queueItems[queue.currentTrack], queue.currentTrack);
   }
 
   shouldComponentUpdate(nextProps) {
-    const currentSong = nextProps.queue.queueItems[nextProps.queue.currentSong];
+    const currentTrack = nextProps.queue.queueItems[nextProps.queue.currentTrack];
 
     return (
       this.props.equalizer !== nextProps.equalizer ||
-      this.props.queue.currentSong !== nextProps.queue.currentSong ||
+      this.props.queue.currentTrack !== nextProps.queue.currentTrack ||
       this.props.player.playbackStatus !== nextProps.player.playbackStatus ||
       this.props.player.seek !== nextProps.player.seek ||
-      (Boolean(currentSong) && Boolean(currentSong.streams))
+      (Boolean(currentTrack) && Boolean(currentTrack.streams))
     );
   }
 
@@ -199,7 +210,7 @@ class SoundContainer extends React.Component {
 
   render() {
     const { queue, player, equalizer, actions, enableSpectrum, currentStream, location, defaultEqualizer } = this.props;
-    const currentTrack = queue.queueItems[queue.currentSong];
+    const currentTrack = queue.queueItems[queue.currentTrack];
     const usedEqualizer = enableSpectrum ? equalizer : defaultEqualizer;
 
     return Boolean(currentStream) && (this.isHlsStream(currentStream.stream) ? (
@@ -286,7 +297,7 @@ export default compose(
     mapDispatchToProps
   ),
   withProps(({ queue }) => ({
-    currentTrack: queue.queueItems[queue.currentSong]
+    currentTrack: queue.queueItems[queue.currentTrack]
   })),
   withProps(({ currentTrack }) => ({
     currentStream: head(currentTrack?.streams)

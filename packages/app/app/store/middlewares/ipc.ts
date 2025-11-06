@@ -1,14 +1,13 @@
-import { getOption, IpcEvents, isValidPort } from '@nuclear/core';
+import { getOption, IpcEvents, isValidPort, logger } from '@nuclear/core';
 import { ipcRenderer } from 'electron';
 import _ from 'lodash';
-import { LocalLibrary } from '../../actions/actionTypes';
-import { Queue, Settings } from '../../actions/actionTypes';
+import { Middleware } from 'redux';
+import { getType } from 'typesafe-actions';
+import { LocalLibrary, Queue, Settings } from '../../actions/actionTypes';
 import { changeConnectivity } from '../../actions/connectivity';
 import * as DownloadActions from '../../actions/downloads';
 import * as PlayerActions from '../../actions/player';
-import { CLOSE_WINDOW, MINIMIZE_WINDOW, MAXIMIZE_WINDOW, OPEN_DEVTOOLS } from '../../actions/window';
-import { getType } from 'typesafe-actions';
-import { Middleware } from 'redux';
+import { CLOSE_WINDOW, MAXIMIZE_WINDOW, MINIMIZE_WINDOW, OPEN_DEVTOOLS } from '../../actions/window';
 
 type IpcActionType = {
   type: string;
@@ -45,6 +44,9 @@ const ipcConnect: Middleware = () => next => {
     case getType(PlayerActions.pausePlayback):
       ipcRenderer.send(IpcEvents.PAUSE);
       break;
+    case getType(PlayerActions.stopPlayback):
+      ipcRenderer.send(IpcEvents.STOP);
+      break;
     
     case LocalLibrary.SCAN_LOCAL_FOLDERS:
       ipcRenderer.send(IpcEvents.LOCALFOLDERS_REFRESH);
@@ -78,6 +80,9 @@ const ipcConnect: Middleware = () => next => {
         break;
       case 'loopAfterQueueEnd':
         ipcRenderer.send(IpcEvents.LOOP, payload.state);
+        break;
+      case 'devtools':
+        ipcRenderer.send(IpcEvents.WINDOW_OPEN_DEVTOOLS);
         break;
       }
       break;
@@ -118,6 +123,7 @@ const ipcConnect: Middleware = () => next => {
       ipcRenderer.send(IpcEvents.DOWNLOAD_PAUSE, track);
       break;
     }
+    case getType(DownloadActions.resumeDownloads):
     case getType(DownloadActions.onDownloadFinished):
     case getType(DownloadActions.onDownloadError): {
       const nextDownload = payload.find((download) =>

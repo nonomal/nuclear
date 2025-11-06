@@ -6,7 +6,7 @@ import prism from 'prism-media';
 import { createWriteStream, createReadStream } from 'fs';
 import { rm } from 'fs/promises';
 
-import { ipcController, ipcEvent } from '../utils/decorators';
+import { ipcController, ipcEvent, ipcInvokeHandler } from '../utils/decorators';
 import { getTrackArtist, getTrackTitle } from '../utils/tracks';
 import Download from '../services/download';
 import Logger, { $mainLogger } from '../services/logger';
@@ -59,6 +59,7 @@ class DownloadIpcCtrl {
       if (downloadRef) {
         if (downloadRef.ref.canResume()) {
           downloadRef.ref.resume();
+          this.window?.send(IpcEvents.DOWNLOAD_STARTED, uuid);
           return;
         }
         this.downloadItems = this.downloadItems.filter((item => item.uuid === uuid));
@@ -69,7 +70,6 @@ class DownloadIpcCtrl {
       // .replace(/[/\\?%*:|"<>]/g, '-') or equivalent invalid characters based on platform
       const filename = this.removeInvalidCharacters(`${artistName} - ${title}`);
 
-      
       await this.download.start({
         query: {
           artist: artistName,
@@ -80,6 +80,7 @@ class DownloadIpcCtrl {
           this.downloadItems = this.downloadItems.filter((item) => item.uuid !== uuid);
           this.downloadItems.push({ uuid, ref: item });
           this.logger.log(`Download started: ${filename}`);
+          this.window?.send(IpcEvents.DOWNLOAD_STARTED, uuid);
         },
         onProgress: (progress) => {
           this.window.send(IpcEvents.DOWNLOAD_PROGRESS, {
@@ -148,6 +149,10 @@ class DownloadIpcCtrl {
     }
   }
 
+  @ipcInvokeHandler(IpcEvents.DOWNLOAD_GET_PATH)
+  async onGetDownloadPath() {
+    return app.getPath('downloads');
+  }
 }
 
 export default DownloadIpcCtrl;

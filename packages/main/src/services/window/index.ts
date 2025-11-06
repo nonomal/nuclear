@@ -62,14 +62,15 @@ class Window {
       webPreferences: {
         nodeIntegration: true,
         webSecurity: false,
-        webviewTag: true,
-        enableRemoteModule: true,
         contextIsolation: false,
         additionalArguments: [
           store.getOption('disableGPU') && '--disable-gpu'
         ]
       }
     });
+
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    require('@electron/remote/main').enable(this.browserWindow.webContents);
 
     if (platform.isMac()) {
       app.dock.setIcon(icon);
@@ -172,13 +173,10 @@ class Window {
 
   async installDevTools() {
     try {
-      await Promise.all([
-        installExtension(REACT_DEVELOPER_TOOLS),
-        installExtension(REDUX_DEVTOOLS)
-      ]);
-      this.logger.log('devtools installed');
+      await installExtension([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS]);
+      this.logger.log('Developer tools successfully installed: React & Redux DevTools');
     } catch (err) {
-      this.logger.warn('something fails while trying to install devtools');
+      this.logger.warn('Failed to install developer tools', { error: err });
     }
   }
 

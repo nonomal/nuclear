@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Popup, PopupProps } from 'semantic-ui-react';
+import Img from 'react-image';
+import artPlaceholder from '../../../resources/media/art_placeholder.png';
 
 import styles from './styles.scss';
 
@@ -24,6 +26,7 @@ const ContextPopup: React.FC<ContextPopupProps> = ({
   const handleOpen = () => setOpen(true);
   return (
     <Popup
+      data-testid='context-popup'
       className={styles.context_popup}
       trigger={trigger}
       open={isOpen}
@@ -38,7 +41,10 @@ const ContextPopup: React.FC<ContextPopupProps> = ({
       <div className={styles.popup_header}>
         {thumb &&
         <div className={styles.popup_thumb}>
-          <img src={thumb} />
+          <Img 
+            src={thumb}
+            unloader={<img src={artPlaceholder}/>}
+          />
         </div>}
         <div className={styles.popup_info}>
           <div className={styles.popup_title}>

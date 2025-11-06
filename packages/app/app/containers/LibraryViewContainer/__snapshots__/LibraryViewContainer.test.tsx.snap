@@ -32,7 +32,7 @@ exports[`Library view container should display an empty local library 1`] = `
           class="ui segment control_bar"
         >
           <button
-            class="ui icon inverted left labeled button add_folder"
+            class="ui icon inverted left labeled button"
           >
             <i
               aria-hidden="true"
@@ -53,7 +53,7 @@ exports[`Library view container should display an empty local library 1`] = `
           class="ui divider"
         />
         <div
-          class="ui divided middle aligned list equalizer_list"
+          class="ui divided middle aligned list list"
           role="list"
         >
           <div
@@ -178,7 +178,7 @@ exports[`Library view container should display local library in album grid mode 
           class="ui segment control_bar"
         >
           <button
-            class="ui icon inverted left labeled button add_folder"
+            class="ui icon inverted left labeled button"
           >
             <i
               aria-hidden="true"
@@ -199,7 +199,7 @@ exports[`Library view container should display local library in album grid mode 
           class="ui divider"
         />
         <div
-          class="ui divided middle aligned list equalizer_list"
+          class="ui divided middle aligned list list"
           role="list"
         >
           <div
@@ -371,19 +371,13 @@ exports[`Library view container should display local library in album grid mode 
                       <td
                         class="track_row_position"
                       />
-                      <td
-                        class="track_row_artist"
-                      >
+                      <td>
                         local artist 1
                       </td>
-                      <td
-                        class="track_row_name"
-                      >
+                      <td>
                         local track 1
                       </td>
-                      <td
-                        class="track_row_album"
-                      >
+                      <td>
                         local album 1
                       </td>
                       <td
@@ -398,19 +392,13 @@ exports[`Library view container should display local library in album grid mode 
                       <td
                         class="track_row_position"
                       />
-                      <td
-                        class="track_row_artist"
-                      >
+                      <td>
                         local artist 1
                       </td>
-                      <td
-                        class="track_row_name"
-                      >
+                      <td>
                         local track 2
                       </td>
-                      <td
-                        class="track_row_album"
-                      >
+                      <td>
                         local album 1
                       </td>
                       <td
@@ -463,7 +451,7 @@ exports[`Library view container should display local library in folder tree mode
           class="ui segment control_bar"
         >
           <button
-            class="ui icon inverted left labeled button add_folder"
+            class="ui icon inverted left labeled button"
           >
             <i
               aria-hidden="true"
@@ -484,7 +472,7 @@ exports[`Library view container should display local library in folder tree mode
           class="ui divider"
         />
         <div
-          class="ui divided middle aligned list equalizer_list"
+          class="ui divided middle aligned list list"
           role="list"
         >
           <div
@@ -723,7 +711,7 @@ exports[`Library view container should display local library in simple list mode
           class="ui segment control_bar"
         >
           <button
-            class="ui icon inverted left labeled button add_folder"
+            class="ui icon inverted left labeled button"
           >
             <i
               aria-hidden="true"
@@ -744,7 +732,7 @@ exports[`Library view container should display local library in simple list mode
           class="ui divider"
         />
         <div
-          class="ui divided middle aligned list equalizer_list"
+          class="ui divided middle aligned list list"
           role="list"
         >
           <div
@@ -837,8 +825,32 @@ exports[`Library view container should display local library in simple list mode
                 <div
                   class="track_table_header_row"
                   role="row"
-                  style="grid-template-columns: 4em 3em minmax(8em, 1fr) 1fr 1fr 6em 6em auto;"
+                  style="grid-template-columns: 7.5em 4em 3em minmax(8em, 1fr) 6em 6em 6em auto;"
                 >
+                  <div
+                    class="track_table_header_cell"
+                    colspan="1"
+                    role="columnheader"
+                  >
+                    <div
+                      class="selection_header"
+                    >
+                      <div
+                        class="ui fitted checkbox nuclear checkbox"
+                        style="cursor: pointer;"
+                      >
+                        <input
+                          class="hidden"
+                          readonly=""
+                          tabindex="0"
+                          title="Toggle All Rows Selected"
+                          type="checkbox"
+                          value=""
+                        />
+                        <label />
+                      </div>
+                    </div>
+                  </div>
                   <div
                     class="track_table_header_cell"
                     colspan="1"
@@ -928,30 +940,6 @@ exports[`Library view container should display local library in simple list mode
                       Length
                     </div>
                   </div>
-                  <div
-                    class="track_table_header_cell"
-                    colspan="1"
-                    role="columnheader"
-                  >
-                    <div
-                      class="selection_header"
-                    >
-                      <div
-                        class="ui fitted checkbox nuclear checkbox"
-                        style="cursor: pointer;"
-                      >
-                        <input
-                          class="hidden"
-                          readonly=""
-                          tabindex="0"
-                          title="Toggle All Rows Selected"
-                          type="checkbox"
-                          value=""
-                        />
-                        <label />
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
               <div
@@ -974,9 +962,28 @@ exports[`Library view container should display local library in simple list mode
                       data-rbd-draggable-id="0"
                       data-testid="track-table-row"
                       role="row"
-                      style="position: absolute; left: 0px; top: 0px; height: 42px; width: 100%; grid-template-columns: 4em 3em minmax(8em, 1fr) 1fr 1fr 6em 6em;"
+                      style="position: absolute; left: 0px; top: 0px; height: 42px; width: 100%; grid-template-columns: 7.5em 4em 3em minmax(8em, 1fr) 6em 6em 6em;"
                       tabindex="0"
                     >
+                      <div
+                        class="selection_cell"
+                        role="cell"
+                      >
+                        <div
+                          class="ui fitted checkbox nuclear checkbox"
+                          style="cursor: pointer;"
+                        >
+                          <input
+                            class="hidden"
+                            readonly=""
+                            tabindex="-1"
+                            title="Toggle Row Selected"
+                            type="checkbox"
+                            value=""
+                          />
+                          <label />
+                        </div>
+                      </div>
                       <div
                         class="grid_track_table_cell position_cell"
                         data-testid="position-cell"
@@ -1000,12 +1007,7 @@ exports[`Library view container should display local library in simple list mode
                       <div
                         class="grid_track_table_cell thumbnail_cell"
                         role="cell"
-                      >
-                        <img
-                          class="thumbnail_cell_thumbnail"
-                          src="local track thumbnail 1"
-                        />
-                      </div>
+                      />
                       <div
                         class="grid_track_table_cell text_cell title_cell"
                         data-testid="title-cell"
@@ -1061,6 +1063,16 @@ exports[`Library view container should display local library in simple list mode
                       >
                         05:00
                       </div>
+                    </div>
+                    <div
+                      class="grid_track_table_row"
+                      data-rbd-draggable-context-id="0"
+                      data-rbd-draggable-id="1"
+                      data-testid="track-table-row"
+                      role="row"
+                      style="position: absolute; left: 0px; top: 42px; height: 42px; width: 100%; grid-template-columns: 7.5em 4em 3em minmax(8em, 1fr) 6em 6em 6em;"
+                      tabindex="1"
+                    >
                       <div
                         class="selection_cell"
                         role="cell"
@@ -1080,16 +1092,6 @@ exports[`Library view container should display local library in simple list mode
                           <label />
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="grid_track_table_row"
-                      data-rbd-draggable-context-id="0"
-                      data-rbd-draggable-id="1"
-                      data-testid="track-table-row"
-                      role="row"
-                      style="position: absolute; left: 0px; top: 42px; height: 42px; width: 100%; grid-template-columns: 4em 3em minmax(8em, 1fr) 1fr 1fr 6em 6em;"
-                      tabindex="1"
-                    >
                       <div
                         class="grid_track_table_cell position_cell"
                         data-testid="position-cell"
@@ -1113,12 +1115,7 @@ exports[`Library view container should display local library in simple list mode
                       <div
                         class="grid_track_table_cell thumbnail_cell"
                         role="cell"
-                      >
-                        <img
-                          class="thumbnail_cell_thumbnail"
-                          src="local track thumbnail 2"
-                        />
-                      </div>
+                      />
                       <div
                         class="grid_track_table_cell text_cell title_cell"
                         data-testid="title-cell"
@@ -1174,6 +1171,16 @@ exports[`Library view container should display local library in simple list mode
                       >
                         03:20
                       </div>
+                    </div>
+                    <div
+                      class="grid_track_table_row"
+                      data-rbd-draggable-context-id="0"
+                      data-rbd-draggable-id="2"
+                      data-testid="track-table-row"
+                      role="row"
+                      style="position: absolute; left: 0px; top: 84px; height: 42px; width: 100%; grid-template-columns: 7.5em 4em 3em minmax(8em, 1fr) 6em 6em 6em;"
+                      tabindex="2"
+                    >
                       <div
                         class="selection_cell"
                         role="cell"
@@ -1193,16 +1200,6 @@ exports[`Library view container should display local library in simple list mode
                           <label />
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="grid_track_table_row"
-                      data-rbd-draggable-context-id="0"
-                      data-rbd-draggable-id="2"
-                      data-testid="track-table-row"
-                      role="row"
-                      style="position: absolute; left: 0px; top: 84px; height: 42px; width: 100%; grid-template-columns: 4em 3em minmax(8em, 1fr) 1fr 1fr 6em 6em;"
-                      tabindex="2"
-                    >
                       <div
                         class="grid_track_table_cell position_cell"
                         data-testid="position-cell"
@@ -1226,12 +1223,7 @@ exports[`Library view container should display local library in simple list mode
                       <div
                         class="grid_track_table_cell thumbnail_cell"
                         role="cell"
-                      >
-                        <img
-                          class="thumbnail_cell_thumbnail"
-                          src="local track thumbnail 3"
-                        />
-                      </div>
+                      />
                       <div
                         class="grid_track_table_cell text_cell title_cell"
                         data-testid="title-cell"
@@ -1286,25 +1278,6 @@ exports[`Library view container should display local library in simple list mode
                         role="cell"
                       >
                         01:40
-                      </div>
-                      <div
-                        class="selection_cell"
-                        role="cell"
-                      >
-                        <div
-                          class="ui fitted checkbox nuclear checkbox"
-                          style="cursor: pointer;"
-                        >
-                          <input
-                            class="hidden"
-                            readonly=""
-                            tabindex="-1"
-                            title="Toggle Row Selected"
-                            type="checkbox"
-                            value=""
-                          />
-                          <label />
-                        </div>
                       </div>
                     </div>
                   </div>

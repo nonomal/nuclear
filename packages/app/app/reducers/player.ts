@@ -1,12 +1,12 @@
-import Sound from 'react-hifi';
 import { getOption } from '@nuclear/core';
+import Sound from 'react-hifi';
+import { ActionType, getType } from 'typesafe-actions';
 import * as PlayerActions from '../actions/player';
 import {
   nextSongAction,
   previousSongAction,
   selectSong
 } from '../actions/queue';
-import { ActionType, getType } from 'typesafe-actions';
 
 export type PlaybackStatus = 'PAUSED' | 'PLAYING' | 'STOPPED'
 
@@ -26,7 +26,7 @@ const initialState: () => PlayerReducerState = () => {
     playbackStreamLoading: false,
     playbackProgress: 0,
     seek: 0,
-    volume: getOption('volume'),
+    volume: getOption('volume') as number,
     muted: false,
     playbackRate: 2
   });
@@ -45,6 +45,10 @@ export default function PlayerReducer(state=initialState(), action: PlayerReduce
   case getType(PlayerActions.pausePlayback):
     return Object.assign({}, state, {
       playbackStatus: Sound.status.PAUSED
+    });
+  case getType(PlayerActions.stopPlayback):
+    return Object.assign({}, state, {
+      playbackStatus: Sound.status.STOPPED
     });
   case getType(PlayerActions.updatePlaybackProgress):
     return Object.assign({}, state, {

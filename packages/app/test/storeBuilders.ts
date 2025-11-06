@@ -59,8 +59,7 @@ export const buildStoreState = () => {
       topTracks: [],
       topTags: [],
       editorialCharts: { ...startingStateMeta },
-      editorialPlaylists: {},
-      promotedArtists: { ...startingStateMeta }
+      editorialPlaylists: {}
     },
     downloads: [],
     favorites: {
@@ -75,28 +74,12 @@ export const buildStoreState = () => {
     },
     queue: {
       queueItems: [],
-      currentSong: 0
+      currentTrack: 0
     },
     nuclear: {
       identity: {
         token: null,
         signedInUser: null
-      },
-      configuration: {
-        configuration: {
-          isLoading: false,
-          isReady: true,
-          data: {
-            PROMOTED_ARTISTS: true
-          }
-        },
-        params: {
-          isLoading: false,
-          isReady: true,
-          data: {
-            PROMOTED_ARTIST_BACKGROUND: 'https://nuclear.js.org/background.jpg'
-          }
-        }
       }
     },
     settings: {}
@@ -626,18 +609,6 @@ export const buildStoreState = () => {
                 }]
               }
             }
-          },
-          promotedArtists: {
-            isLoading: false,
-            isReady: true,
-            data: [{
-              id: '1',
-              name: 'Promoted artist 1',
-              description: 'Promoted artist 1 description',
-              link: 'https://promoted-artist-1.example',
-              picture: 'https://promoted-artist-1.example/picture.jpg',
-              metaProvider: 'bandcamp'              
-            }]
           }
         }
       };
@@ -725,7 +696,6 @@ export const buildStoreState = () => {
                 duration: 300,
                 title: 'test track 1',
                 thumbnail: 'https://test-track-thumb-url',
-                format: 'webm',
                 skipSegments: [
                   {
                     category: 'intro',
@@ -745,10 +715,12 @@ export const buildStoreState = () => {
                 ],
                 originalUrl: 'https://test-track-original-url'
               }, {
+                id: 'test-stream-provider-id',
                 source: 'Test Stream Provider',
                 title: 'test track 1 - different stream'
               }],
               uuid: 'uuid1',
+              queueId: '1',
               loading: false,
               error: false
             },
@@ -763,10 +735,10 @@ export const buildStoreState = () => {
                 duration: 300,
                 title: 'test track 2',
                 thumbnail: 'https://test-track-thumb-url',
-                format: 'webm',
                 skipSegments: []
               }],
               uuid: 'uuid2',
+              queueId: '2',
               loading: false,
               error: false
             },
@@ -781,15 +753,15 @@ export const buildStoreState = () => {
                 duration: 300,
                 title: 'test track 3',
                 thumbnail: 'https://test-track-thumb-url',
-                format: 'webm',
                 skipSegments: []
               }],
               uuid: 'uuid3',
+              queueId: '3',
               loading: false,
               error: false
             }
           ],
-          currentSong: 0
+          currentTrack: 0
         }
       };
 

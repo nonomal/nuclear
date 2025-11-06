@@ -1,6 +1,3 @@
-import { app, remote } from 'electron';
-import { v4 } from 'uuid';
-
 export enum SettingType {
   BOOLEAN = 'boolean',
   LIST = 'list',
@@ -46,7 +43,7 @@ export type Setting = {
   buttonIcon?: string;
 };
 
-export const settingsConfig: Array<Setting> = [
+export const createSettingsConfig: (app?: Electron.App) => Array<Setting> = (app) => [
   {
     name: 'rate',
     category: 'playback',
@@ -200,14 +197,6 @@ export const settingsConfig: Array<Setting> = [
     default: true
   },
   {
-    name: 'promotedArtists',
-    category: 'display',
-    type: SettingType.BOOLEAN,
-    prettyName: 'promoted-artists',
-    description: 'promoted-artists-description',
-    default: true
-  },
-  {
     name: 'api.enabled',
     category: 'http',
     type: SettingType.BOOLEAN,
@@ -287,9 +276,7 @@ export const settingsConfig: Array<Setting> = [
     buttonIcon: 'folder open',
     default: app
       ? app.getPath('downloads')
-      : remote
-        ? remote.app.getPath('downloads')
-        : ''
+      : ''
   },
   {
     name: 'max.downloads',
@@ -298,6 +285,13 @@ export const settingsConfig: Array<Setting> = [
     prettyName: 'downloads-count',
     default: 1,
     min: 1
+  },
+  {
+    name: 'autoDownloadFavourites',
+    category: 'downloads',
+    type: SettingType.BOOLEAN,
+    prettyName: 'auto-download-favourites',
+    default: false
   },
   {
     name: 'devtools',
@@ -344,7 +338,7 @@ export const settingsConfig: Array<Setting> = [
     category: 'social',
     type: SettingType.STRING,
     default:
-      '#nowplaying {{artist}} - {{title}} #nuclear https://nuclear.js.org',
+      '#nowplaying {{artist}} - {{title}} #nuclear https://nuclearplayer.com',
     hide: true
   },
   {

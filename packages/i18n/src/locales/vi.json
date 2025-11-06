@@ -42,12 +42,19 @@
   },
   "artist": {
     "add-all": "Thêm tất cả",
-    "count": "Số lượt nghe",
+    "count": "Playcount",
     "queue": "Thêm tất cả bài hát vào playlist",
     "similar": "Nghệ sỹ tương tự",
     "title": "Tên bài hát",
     "tour": "Đang lưu diễn",
-    "popular-tracks": "Các bài hát phổ biến"
+    "popular-tracks": "Các bài hát phổ biến",
+    "artist-albums": {
+      "header": "Albums",
+      "sort-by-release-date": "Sort by release date",
+      "sort-by-az": "Sort A-Z",
+      "sort-by-most-played": "Sort by most played",
+      "filter-placeholder": "Filter..."
+    }
   },
   "dashboard": {
     "add-all": "Thêm tất cả",
@@ -195,7 +202,9 @@
     "input-playlist-url": "Dán một liên kết của danh sách phát:",
     "create-playlist-dialog-title": "Nhập tên của danh sách phát:",
     "playlist": "Danh sách phát",
-    "play": "Phát"
+    "play": "Phát",
+    "external-source-tooltip": "This playlist is from an external source: {{source}}. You can't edit it. Save it locally using the playlist menu to make changes.",
+    "save-external-playlist": "Save locally"
   },
   "plugins": {
     "add-a-plugin": "Thêm plugin",
@@ -225,7 +234,7 @@
     "copy-track-url": "Sao chép liên kết của bài hát đến bảng nhớ tạm",
     "loading": "Stream đang tải.",
     "playlist-add": "Thêm vào playlist",
-    "playlist-add-queue": "Thêm vào hàng đợi playlist",
+    "playlist-add-queue": "Add queue to playlist",
     "playlist-toast-content": "Playlist {{name}} đã được tạo.",
     "playlist-toast-title": "Playlist đã được tạo",
     "live": "Trực tiếp",
@@ -281,6 +290,7 @@
     "autoradio-craziness": "Autoradio craziness",
     "autoradio-craziness-description": "Autoradio sẽ chọn các bài khác không tương tự với các bài hát trong danh sách đang phát",
     "autoradio-description": "Tự động thêm các bài hát tương tự khi danh sách phát kết thúc",
+    "auto-download-favourites": "Auto download favorite track",
     "listening-history": "Mới phát gần đây",
     "listening-history-description": "Log the tracks you listen to, a la Last.fm. The history is stored offline.",
     "compact-menu-bar": "Sử dụng thanh menu dạng nhỏ",
@@ -332,8 +342,6 @@
     "notlogged": "Chưa đăng nhập",
     "playback": "Lặp lại",
     "program-settings": "Cài đặt chương trình",
-    "promoted-artists": "Show promoted artists in the dashboard",
-    "promoted-artists-description": "This is a reel of interesting, handpicked indie artists you might like. No one's receiving any compensation for this.",
     "saving-in": "Saving in:",
     "seek-iteration": "Số giây sẽ tua tới/lui khi nhấn phím mũi tên qua phải/ qua trái",
     "show-tray-icon": "Show tray icon",
@@ -385,7 +393,8 @@
     "add-selected-tracks-to-favorites": "Add selected to favorites",
     "play-selected-tracks-now": "Phát bài hát đã chọn",
     "tracks-selected-label-singular": "bài hát đã chọn",
-    "tracks-selected-label-plural": "bài hát đã chọn"
+    "tracks-selected-label-plural": "bài hát đã chọn",
+    "filter-input-placeholder": "Filter..."
   },
   "visualizer": {
     "exit-fullscreen": "Nhấn ESC để thoát khỏi chế độ toàn màn hình"
